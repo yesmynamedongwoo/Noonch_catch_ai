@@ -20,10 +20,12 @@ def upload_tensor_img(bucket, tensor, key):
     image.save(buffer, 'PNG')
     buffer.seek(0)  # 0번째 포인터위치부터 파일을 읽으라는 뜻
     # s3 에다가 업로드
-    NstappConfig.s3.put_object(Bucket=bucket, Key=f"{key}.png", Body=buffer, ACL='public-read', ContentType= 'application-octet-stream')
+    NstappConfig.s3.put_object(Bucket=bucket, Key=f"{key}.png", Body=buffer, ACL='public-read',
+                               ContentType='application-octet-stream')
     # s3 에 올라간 파일의 링크를 리턴함
     location = NstappConfig.s3.get_bucket_location(Bucket=bucket)['LocationConstraint']
     url = "https://s3-%s.amazonaws.com/%s/%s.png" % (location, bucket, key)
+    print(url)
     return url
 
 
@@ -55,12 +57,12 @@ def nst_apply(key: str) -> str:
                                          )
 
     style_path2 = tf.keras.utils.get_file('marvel.jpg',
-                                         'http://www.gamtoon.com/wupload2/180808_mbb_3.jpg'
-                                         )
+                                          'http://www.gamtoon.com/wupload2/180808_mbb_3.jpg'
+                                          )
 
     style_path3 = tf.keras.utils.get_file('cartoon.jpg',
-                                         'https://noonch-catch-ai.s3.ap-northeast-2.amazonaws.com/Picsart_22-02-28_19-37-02-083.jpg'
-                                         )
+                                          'https://noonch-catch-ai.s3.ap-northeast-2.amazonaws.com/Picsart_22-02-28_19-37-02-083.jpg'
+                                          )
 
     style_path4 = tf.keras.utils.get_file('gohe.jpg',
                                           'https://noonch-catch-ai.s3.ap-northeast-2.amazonaws.com/aaaaaaaaaaaaaa.jpg'
@@ -72,13 +74,9 @@ def nst_apply(key: str) -> str:
                                           'https://noonch-catch-ai.s3.ap-northeast-2.amazonaws.com/cenedecirco.jpg'
                                           )
 
-
-    style_path_all = [style_path,style_path2,style_path3,style_path4,style_path5,style_path6]
-
-
+    style_path_all = [style_path, style_path2, style_path3, style_path4, style_path5, style_path6]
 
     choicelstyle = random.choice(style_path_all)
-
 
     keyword_img = search_img(key)
     response = requests.get(keyword_img)
